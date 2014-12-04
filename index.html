@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link href="styles/vis.css" rel="stylesheet"</link>
+    <link href="styles/baby.css" rel="stylesheet"</link>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800|Open+Sans+Condensed:300,300italic,700|Alegreya:900' rel='stylesheet' type='text/css'>
+    <script src="scripts/jquery-2.1.1.min.js"></script>
+    <script src="scripts/underscore-min.js"></script>
+    <script src="scripts/moment.min.js"></script>
+    <script src="scripts/tabletop.js"></script>
+    <script src="scripts/vis.js"></script>
+    <script src="scripts/baby.js"></script>
+  </head>
+  <body>
+    <div class="loader">
+      <img src="img/loader.gif"/>
+    </div>
+    <div class="main-content">
+      <div class="controls">
+        <div class="controls-group expansion-controls">
+          <label><input type="checkbox" name="align" value="date" checked/>Show events</label>
+        </div>
+        <div class="controls-group alignment-controls">
+          <span class="controls-title">Align by:</span>
+          <span class="controls-options"></span>
+        </div>
+      </div>
+      <h1></h1>
+      <div style="clear: both"/>
+      <div class="timelines-container"/>
+    </div>
+    <script type="text/javascript">
+      var SPREADSHEET_KEY = "";
+    </script>
+  </body>
+</html>
