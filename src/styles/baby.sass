@@ -1,0 +1,77 @@
+html, body
+  font-family: "Open Sans", sans-serif
+  padding: 0
+  margin: 0
+  font-size: 12px  
+
+body
+  padding: 25px
+
+.main-content
+  display: none
+
+h1
+  font-family: "Alegreya", serif
+  font-weight: 900
+  color: #888
+  font-size: 3em
+  float: left
+  margin-top: 0
+
+.loader
+  img
+    width: 300px
+
+.controls
+  text-align: right
+  margin-bottom: 25px
+  float: right
+  line-height: 3em
+  height: 3em
+  margin-top: 10px
+
+.controls-group
+  display: inline-block
+  margin-left: 25px
+
+.timeline-container
+  margin-bottom: 25px
+
+table.timelines-table
+  width: 100%
+  td.header
+    width: 130px
+    padding-right: 20px
+    vertical-align: middle
+    h2
+      font-family: "Open Sans Condensed", sans-serif
+      font-weight: 300
+      color: #888
+      font-size: 2em
+
+$sleep-color: #852D74
+$fuss-color: #DB1A8B
+$awake-color: #F2E41B
+$feed-color: #43D41C
+
+.vis.timeline 
+  .labelset .vlabel
+    color: #888
+    font-family: "Open Sans Condensed", sans-serif
+  .vispanel.left
+    width: 40px !important
+    overflow: hidden
+  .timeaxis .text
+    color: #888
+    font-family: "Open Sans Condensed", sans-serif    
+  .item
+    font-family: "Open Sans Condensed", sans-serif
+    padding: 2px
+    background-color: #9E9E9E
+    border-color: #9E9E9E
+    color: #FFF
+  .item.state
+    text-transform: uppercase
+    .content
+      top: initial !important
+      bottom: 0
