@@ -48,6 +48,28 @@ handleData = (data, tabletop) ->
 
   curTimelines[0] = renderTimelines(allEvents, "date", alignKeys, eventTrendKeys, stateTrendKeys)
 
+renderGroupHeader = (title, events, stateTrendKeys, eventTrendKeys) ->
+  $container = $("<div/>")
+  $container.append($("<h2/>").text(title))
+  $aggs = $("<ul/>").addClass("aggs").appendTo($container)
+  stateStats = _.object([k.name, 0] for k in stateTrendKeys)
+  eventStats = _.object([k.name, 0] for k in eventTrendKeys)
+  dateRange = getEventsDateRange(events)
+  for event in events
+    if event.stateKey?
+      for key in stateTrendKeys
+        if containsAction(event.stateKey.name, key.value)
+          stateStats[key.name] += intervalOverlap(event.start, event.end, dateRange.min, dateRange.max)
+    else
+      for key in eventTrendKeys
+        if containsActions([event.eventKey?.name, event.text], key.value)
+          eventStats[key.name] += 1
+  for key in stateTrendKeys
+    $("<li/>").append($("<span class='agg-key'/>").text("#{key.name}").css("backgroundColor", key.backgroundcolor ? "").css("color", key.foregroundcolor ? "")).append($("<span class='agg-val'/>").text("#{moment.duration(stateStats[key.name]).humanize()}")).appendTo($aggs)
+  for key in eventTrendKeys
+    $("<li/>").append($("<span class='agg-key'/>").text("#{key.name}").css("backgroundColor", key.backgroundcolor ? "").css("color", key.foregroundcolor ? "")).append($("<span class='agg-val'/>").text("#{eventStats[key.name]}")).appendTo($aggs)
+  return $container
+
 renderTimelines = (allEvents, mode, alignKeys, eventTrendKeys, stateTrendKeys) ->
   boundaryCond = if mode == "date" then dateBoundaryCond else customBoundaryCond((_.find alignKeys, (k) -> k.name == mode).value)
   groupedEvents = groupEventsByBoundary(allEvents, boundaryCond)
@@ -62,7 +84,7 @@ renderTimelines = (allEvents, mode, alignKeys, eventTrendKeys, stateTrendKeys) -
   timelines = []
   for [title, events] in groupedEvents.reverse()
     $tr = $("<tr/>").appendTo($table)
-    $("<td/>").addClass("header").appendTo($tr).append($("<h2/>").text(title))
+    $("<td/>").addClass("header").appendTo($tr).append(renderGroupHeader(title, events, stateTrendKeys, eventTrendKeys))
     $timeline = $("<td/>").appendTo($tr)
     timeline = renderEvents($timeline, events)
     timelines.push(timeline)
