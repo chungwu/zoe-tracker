@@ -67,7 +67,7 @@ renderGroupHeader = (title, events, stateTrendKeys, eventTrendKeys) ->
   for key in stateTrendKeys
     $("<li/>").append($("<span class='agg-key'/>").text("#{key.name}").css("backgroundColor", key.backgroundcolor ? "").css("color", key.foregroundcolor ? "")).append($("<span class='agg-val'/>").text("#{moment.duration(stateStats[key.name]).humanize()}")).appendTo($aggs)
   for key in eventTrendKeys
-    $("<li/>").append($("<span class='agg-key'/>").text("#{key.name}").css("backgroundColor", key.backgroundcolor ? "").css("color", key.foregroundcolor ? "")).append($("<span class='agg-val'/>").text("#{eventStats[key.name]}")).appendTo($aggs)
+    $("<li/>").append($("<span class='agg-key'/>").text("#{key.name}").css("backgroundColor", key.backgroundcolor ? "").css("color", key.foregroundcolor ? "")).append($("<span class='agg-val'/>").text("#{eventStats[key.name]}x")).appendTo($aggs)
   return $container
 
 renderTimelines = (allEvents, mode, alignKeys, eventTrendKeys, stateTrendKeys) ->
