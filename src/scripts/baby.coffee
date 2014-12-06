@@ -375,10 +375,12 @@ deserializeEventRows = (data) ->
   allRows = []
   for sheetName, sheet of data
     rows = sheet.elements;
-    if _.all(_.contains(sheet.column_names, name) for name in ["timestamp", "time", "action", "date"])
+    if _.all(_.contains(sheet.column_names, name) for name in ["timestamp", "time", "action", "date", "minutesago"])
       for row in rows
         submitTimestamp = if row.timestamp then moment(row.timestamp, "M/DD/YYYY H:mm:ss") else undefined
-        if not row.time
+        if row.minutesago
+          row.timestamp = submitTimestamp.subtract(parseInt(row.minutesago), "minutes")
+        else if not row.time
           row.timestamp = submitTimestamp
         else if not row.date
           row.timestamp = moment("#{submitTimestamp.format('M/DD/YYYY')} #{row.time}", "M/DD/YYYY H:mm:ss A")
