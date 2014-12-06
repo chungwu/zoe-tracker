@@ -48,18 +48,17 @@ handleData = (data, tabletop) ->
 
   curTimelines[0] = renderTimelines(allEvents, "date", alignKeys, eventTrendKeys, stateTrendKeys)
 
-renderGroupHeader = (title, events, stateTrendKeys, eventTrendKeys) ->
+renderGroupHeader = (group, stateTrendKeys, eventTrendKeys) ->
   $container = $("<div/>")
-  $container.append($("<h2/>").text(title))
+  $container.append($("<h2/>").text(group.title))
   $aggs = $("<ul/>").addClass("aggs").appendTo($container)
   stateStats = _.object([k.name, 0] for k in stateTrendKeys)
   eventStats = _.object([k.name, 0] for k in eventTrendKeys)
-  dateRange = getEventsDateRange(events)
-  for event in events
+  for event in group.events
     if event.stateKey?
       for key in stateTrendKeys
         if containsAction(event.stateKey.name, key.value)
-          stateStats[key.name] += intervalOverlap(event.start, event.end, dateRange.min, dateRange.max)
+          stateStats[key.name] += intervalOverlap(event.start, event.end, group.minDate, group.maxDate)
     else
       for key in eventTrendKeys
         if containsActions([event.eventKey?.name, event.text], key.value)
@@ -73,6 +72,7 @@ renderGroupHeader = (title, events, stateTrendKeys, eventTrendKeys) ->
 renderTimelines = (allEvents, mode, alignKeys, eventTrendKeys, stateTrendKeys) ->
   boundaryCond = if mode == "date" then dateBoundaryCond else customBoundaryCond((_.find alignKeys, (k) -> k.name == mode).value)
   groupedEvents = groupEventsByBoundary(allEvents, boundaryCond)
+  setGroupDateRanges(mode, groupedEvents)
 
   $body = $(".timelines-container").empty()
   $table = $("<table/>").addClass("timelines-table").appendTo($body)
@@ -82,14 +82,12 @@ renderTimelines = (allEvents, mode, alignKeys, eventTrendKeys, stateTrendKeys) -
   $summariesTimeline = $("<td/>").appendTo($tr)
 
   timelines = []
-  for [title, events] in groupedEvents.reverse()
+  for group in groupedEvents.reverse()
     $tr = $("<tr/>").appendTo($table)
-    $("<td/>").addClass("header").appendTo($tr).append(renderGroupHeader(title, events, stateTrendKeys, eventTrendKeys))
+    $("<td/>").addClass("header").appendTo($tr).append(renderGroupHeader(group, stateTrendKeys, eventTrendKeys))
     $timeline = $("<td/>").appendTo($tr)
-    timeline = renderEvents($timeline, events)
+    timeline = renderEvents($timeline, group)
     timelines.push(timeline)
-
-  setTimelineRanges(mode, timelines)
 
   summariesTimeline = generateSummaries($summariesTimeline, timelines, eventTrendKeys, stateTrendKeys)
   timelines.push(summariesTimeline)
@@ -109,33 +107,21 @@ renderTimelines = (allEvents, mode, alignKeys, eventTrendKeys, stateTrendKeys) -
 
   return timelines
 
-setTimelineRanges = (mode, timelines) ->
-  ranges = (getEventsDateRange(t.itemsData.get()) for t in timelines)
+setGroupDateRanges = (mode, groups) ->
+  for g in groups
+    range = getEventsDateRange(g.events)
+    g.firstDate = range.min
+    g.lastDate = range.max
+
   if mode == "date"
-    for timeline, i in timelines
-      dateRange = ranges[i]
-      dateRange = {
-        min: moment(dateRange.min).startOf("day").toDate()
-        max: moment(dateRange.max).endOf("day").toDate()
-      }
-      timeline.dateRange = dateRange
-      timeline.setOptions {
-        max: moment(dateRange.max).add(1, "hour").toDate(),
-        min: moment(dateRange.min).subtract(1, "hour").toDate()
-      }
+    for group, i in groups
+      group.minDate = moment(group.firstDate).startOf("day").toDate()
+      group.maxDate = moment(group.lastDate).endOf("day").toDate()
   else
-    maxDuration = _.max(r.max - r.min for r in ranges)
-    for timeline, i in timelines
-      dateRange = ranges[i]
-      dateRange = {
-        min: moment(dateRange.min).toDate()
-        max: moment(dateRange.min).add(maxDuration, "milliseconds").toDate()
-      }
-      timeline.dateRange = dateRange
-      timeline.setOptions {
-        max: moment(dateRange.max).add(1, "hour").toDate(),
-        min: moment(dateRange.min).subtract(1, "hour").toDate()
-      }
+    maxDuration = _.max(g.lastDate - g.firstDate for g in groups)
+    for group in groups
+      group.minDate = moment(group.firstDate).toDate()
+      group.maxDate = moment(group.firstDate).add(maxDuration, "milliseconds").toDate()
 
 setRange = (timelines, start, end) ->
   anchor = _.find timelines, (t) -> t.getWindow().start.valueOf() == start.valueOf() and t.getWindow().end.valueOf() == end.valueOf()
@@ -174,7 +160,7 @@ groupEventsByBoundary = (events, boundaryCondition) ->
     boundary = boundaryCondition(curBoundary, event)
     if boundary?
       if curEvents.length > 0
-        results.push [curBoundary, curEvents]
+        results.push {title: curBoundary, events: curEvents}
         curEvents = []
         if curState?
           curEvents.push curState
@@ -189,7 +175,7 @@ groupEventsByBoundary = (events, boundaryCondition) ->
       curState = event
 
   if curEvents.length > 0
-    results.push [curBoundary, curEvents]
+    results.push {title: curBoundary, events: curEvents}
 
   results
 
@@ -357,14 +343,16 @@ timeIn = (date, start, end) ->
   return date >= start and date <= end    
 
 
-renderEvents = ($container, events) ->
+renderEvents = ($container, group) ->
   items = new vis.DataSet()
   options = {
     height: "200px"
     padding: 2
     showMajorLabels: false
+    max: moment(group.maxDate).add(1, "hour").toDate()
+    min: moment(group.minDate).subtract(1, "hour").toDate()
   }
-  for event in events
+  for event in group.events
     items.add(event)
     if event.end?
       bgEvent = _.clone(_.omit(event, ["id"]))
@@ -374,6 +362,7 @@ renderEvents = ($container, events) ->
       items.add(bgEvent)
 
   timeline = new vis.Timeline($container[0], items, [{id: "point", content: "Events"}], options)
+  timeline.dateRange = {max: group.maxDate, min: group.minDate}
   return timeline
 
 deserializeKeyRows = (data) ->
