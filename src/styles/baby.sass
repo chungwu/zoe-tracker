@@ -89,8 +89,41 @@ $feed-color: #43D41C
     background-color: #9E9E9E
     border-color: #9E9E9E
     color: #FFF
+  .item.range
+    .content
+      position: static
+      overflow: visible
+  .item
+    &:hover
+      z-index: 100
+      overflow: visible
+      .content
+        //width: 100%
+        overflow: visible
   .item.state
     text-transform: uppercase
     .content
       top: initial !important
       bottom: 0
+
+.event-content
+  display: block
+  .event-time
+    display: none
+    position: absolute
+    color: #fff
+    text-shadow: 0px 0px 5px #000
+    font-weight: 600
+    z-index: 10
+    top: 2px
+  .event-start
+    right: 100%
+    margin-right: 5px
+  .event-end
+    left: 100%
+    margin-left: 5px
+.item:hover
+  .event-content
+    overflow: visible
+    .event-time
+      display: block

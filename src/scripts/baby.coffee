@@ -40,11 +40,11 @@ handleData = (data, tabletop) ->
     if $(@).is(":checked")
       for timeline in timelines[0...timelines.length-1]
         timeline.setGroups([{id: "point", content: "Events"}])
-        timeline.setOptions({height: "200px"})
+        timeline.setOptions({height: "200px", stack: true})
     else
       for timeline in timelines[0...timelines.length-1]
         timeline.setGroups([{id: "state", content: "State"}])
-        timeline.setOptions({height: null})
+        timeline.setOptions({height: null, stack: false})
 
   curTimelines[0] = renderTimelines(allEvents, "date", alignKeys, eventTrendKeys, stateTrendKeys)
 
@@ -183,7 +183,7 @@ rowsToEvents = (rows, eventKeys) ->
   _.map rows, (row) ->
     eventKey = _.find eventKeys, (k) -> containsAction(row.action, k.value)
     {
-      content: row.action
+      content: $("<span/>").append($("<span class='event-content'/>").append($("<span class='event-time event-start'/>").text(row.timestamp.format("h:mm:ssa"))).append($("<span class='event-action'/>").text(row.action))).html()
       text: row.action
       start: row.timestamp.toDate()
       group: "point"
@@ -203,19 +203,23 @@ generateStateEvents = (events, stateKeys) ->
   results = []
   curState = undefined
 
+  stateContentHtml = (state) ->
+    $("<div/>").append($("<div class='event-content'/>").append($("<div class='event-time event-start'/>").text(moment(state.start).format("h:mm:ssa"))).append($("<div class='event-action'/>").text(state.text)).append($("<div class='event-time event-end'/>").text(moment(state.end).format("h:mm:ssa")))).html()
+
   for event in events
     stateKey = _.find stateKeys, (k) -> containsActions([event.text, event.eventKey?.name], k.value)
     if stateKey?        
       if curState? and curState.text != stateKey.name
         curState.end = event.start
+        curState.content = stateContentHtml(curState)
         results.push curState
       if not curState? or curState?.text != stateKey.name
         curState = {
-          content: stateKey.name,
+          content: ""
           text: stateKey.name,
           start: event.start,
           group: "state",
-          type: "background",
+          type: "range",
           title: stateKey.name,
           stateKey: stateKey,
           #className: "state state-#{type}"
@@ -224,6 +228,7 @@ generateStateEvents = (events, stateKeys) ->
 
   if curState?
     curState.end = moment(curState.start).add(1, "hour").toDate()
+    curState.content = stateContentHtml(curState)
     results.push curState
 
   results
@@ -357,7 +362,7 @@ renderEvents = ($container, group) ->
     if event.end?
       bgEvent = _.clone(_.omit(event, ["id"]))
       _.extend bgEvent, {
-        group: "point", content: "", style: bgEvent.style + "; opacity: 0.2"
+        group: "point", content: "", style: bgEvent.style + "; opacity: 0.2", type: "background"
       }
       items.add(bgEvent)
 
