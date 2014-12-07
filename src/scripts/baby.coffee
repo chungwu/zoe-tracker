@@ -183,7 +183,7 @@ rowsToEvents = (rows, eventKeys) ->
   _.map rows, (row) ->
     eventKey = _.find eventKeys, (k) -> containsAction(row.action, k.value)
     {
-      content: $("<span/>").append($("<span class='event-content'/>").append($("<span class='event-time event-start'/>").text(row.timestamp.format("h:mm:ssa"))).append($("<span class='event-action'/>").text(row.action))).html()
+      content: $("<span/>").append($("<span class='event-content'/>").append($("<span class='event-time event-start'/>").text(row.timestamp.format("h:mma"))).append($("<span class='event-action'/>").text(row.action))).html()
       text: row.action
       start: row.timestamp.toDate()
       group: "point"
@@ -204,7 +204,7 @@ generateStateEvents = (events, stateKeys) ->
   curState = undefined
 
   stateContentHtml = (state) ->
-    $("<div/>").append($("<div class='event-content'/>").append($("<div class='event-time event-start'/>").text(moment(state.start).format("h:mm:ssa"))).append($("<div class='event-action'/>").text(state.text)).append($("<div class='event-time event-end'/>").text(moment(state.end).format("h:mm:ssa")))).html()
+    $("<div/>").append($("<div class='event-content'/>").append($("<div class='event-time event-start'/>").text(moment(state.start).format("h:mma"))).append($("<div class='event-action'/>").text(state.text)).append($("<div class='event-time event-end'/>").text(moment(state.end).format("h:mma")))).html()
 
   for event in events
     stateKey = _.find stateKeys, (k) -> containsActions([event.text, event.eventKey?.name], k.value)
