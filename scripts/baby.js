@@ -375,7 +375,7 @@
         return containsAction(row.action, k.value);
       });
       return {
-        content: $("<span/>").append($("<span class='event-content'/>").append($("<span class='event-time event-start'/>").text(row.timestamp.format("h:mm:ssa"))).append($("<span class='event-action'/>").text(row.action))).html(),
+        content: $("<span/>").append($("<span class='event-content'/>").append($("<span class='event-time event-start'/>").text(row.timestamp.format("h:mma"))).append($("<span class='event-action'/>").text(row.action))).html(),
         text: row.action,
         start: row.timestamp.toDate(),
         group: "point",
@@ -403,7 +403,7 @@
     results = [];
     curState = void 0;
     stateContentHtml = function(state) {
-      return $("<div/>").append($("<div class='event-content'/>").append($("<div class='event-time event-start'/>").text(moment(state.start).format("h:mm:ssa"))).append($("<div class='event-action'/>").text(state.text)).append($("<div class='event-time event-end'/>").text(moment(state.end).format("h:mm:ssa")))).html();
+      return $("<div/>").append($("<div class='event-content'/>").append($("<div class='event-time event-start'/>").text(moment(state.start).format("h:mma"))).append($("<div class='event-action'/>").text(state.text)).append($("<div class='event-time event-end'/>").text(moment(state.end).format("h:mma")))).html();
     };
     for (_i = 0, _len = events.length; _i < _len; _i++) {
       event = events[_i];
