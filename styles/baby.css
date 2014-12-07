@@ -124,12 +124,60 @@ ul.aggs li span.agg-val {
   border-color: #9e9e9e;
   color: white;
 }
-/* line 92, ../../src/styles/baby.sass */
+/* line 93, ../../src/styles/baby.sass */
+.vis.timeline .item.range .content {
+  position: static;
+  overflow: visible;
+}
+/* line 97, ../../src/styles/baby.sass */
+.vis.timeline .item:hover {
+  z-index: 100;
+  overflow: visible;
+}
+/* line 100, ../../src/styles/baby.sass */
+.vis.timeline .item:hover .content {
+  overflow: visible;
+}
+/* line 103, ../../src/styles/baby.sass */
 .vis.timeline .item.state {
   text-transform: uppercase;
 }
-/* line 94, ../../src/styles/baby.sass */
+/* line 105, ../../src/styles/baby.sass */
 .vis.timeline .item.state .content {
   top: initial !important;
   bottom: 0;
+}
+
+/* line 109, ../../src/styles/baby.sass */
+.event-content {
+  display: block;
+}
+/* line 111, ../../src/styles/baby.sass */
+.event-content .event-time {
+  display: none;
+  position: absolute;
+  color: white;
+  text-shadow: 0px 0px 5px black;
+  font-weight: 600;
+  z-index: 10;
+  top: 2px;
+}
+/* line 119, ../../src/styles/baby.sass */
+.event-content .event-start {
+  right: 100%;
+  margin-right: 5px;
+}
+/* line 122, ../../src/styles/baby.sass */
+.event-content .event-end {
+  left: 100%;
+  margin-left: 5px;
+}
+
+/* line 126, ../../src/styles/baby.sass */
+.item:hover .event-content {
+  overflow: visible;
+}
+/* line 128, ../../src/styles/baby.sass */
+.item:hover .event-content .event-time {
+  display: block;
 }

@@ -113,7 +113,8 @@
             }
           ]);
           _results.push(timeline.setOptions({
-            height: "200px"
+            height: "200px",
+            stack: true
           }));
         }
         return _results;
@@ -129,7 +130,8 @@
             }
           ]);
           _results1.push(timeline.setOptions({
-            height: null
+            height: null,
+            stack: false
           }));
         }
         return _results1;
@@ -373,7 +375,7 @@
         return containsAction(row.action, k.value);
       });
       return {
-        content: row.action,
+        content: $("<span/>").append($("<span class='event-content'/>").append($("<span class='event-time event-start'/>").text(row.timestamp.format("h:mm:ssa"))).append($("<span class='event-action'/>").text(row.action))).html(),
         text: row.action,
         start: row.timestamp.toDate(),
         group: "point",
@@ -397,9 +399,12 @@
   };
 
   generateStateEvents = function(events, stateKeys) {
-    var curState, event, results, stateKey, _i, _len, _ref, _ref1, _ref2;
+    var curState, event, results, stateContentHtml, stateKey, _i, _len, _ref, _ref1, _ref2;
     results = [];
     curState = void 0;
+    stateContentHtml = function(state) {
+      return $("<div/>").append($("<div class='event-content'/>").append($("<div class='event-time event-start'/>").text(moment(state.start).format("h:mm:ssa"))).append($("<div class='event-action'/>").text(state.text)).append($("<div class='event-time event-end'/>").text(moment(state.end).format("h:mm:ssa")))).html();
+    };
     for (_i = 0, _len = events.length; _i < _len; _i++) {
       event = events[_i];
       stateKey = _.find(stateKeys, function(k) {
@@ -409,15 +414,16 @@
       if (stateKey != null) {
         if ((curState != null) && curState.text !== stateKey.name) {
           curState.end = event.start;
+          curState.content = stateContentHtml(curState);
           results.push(curState);
         }
         if (!(curState != null) || (curState != null ? curState.text : void 0) !== stateKey.name) {
           curState = {
-            content: stateKey.name,
+            content: "",
             text: stateKey.name,
             start: event.start,
             group: "state",
-            type: "background",
+            type: "range",
             title: stateKey.name,
             stateKey: stateKey,
             style: "background-color: " + ((_ref = stateKey.backgroundcolor) != null ? _ref : '') + "; border-color: " + ((_ref1 = stateKey.backgroundcolor) != null ? _ref1 : '') + "; color: " + ((_ref2 = stateKey.foregroundcolor) != null ? _ref2 : '') + ";"
@@ -427,6 +433,7 @@
     }
     if (curState != null) {
       curState.end = moment(curState.start).add(1, "hour").toDate();
+      curState.content = stateContentHtml(curState);
       results.push(curState);
     }
     return results;
@@ -713,7 +720,8 @@
         _.extend(bgEvent, {
           group: "point",
           content: "",
-          style: bgEvent.style + "; opacity: 0.2"
+          style: bgEvent.style + "; opacity: 0.2",
+          type: "background"
         });
         items.add(bgEvent);
       }
