@@ -1,12 +1,15 @@
 zoe-tracker
 ===========
+This simple tool allows you to track and visualize things happening throughout the day.  I built this to visualize the sleeping / feeding patterns of my 4-months-old baby, but you can use it to track whatever you want!  It is pretty flexible.
+
+Here's an [example visualization](https://chungwu.github.io/zoe-tracker/#1XvpruCtAoHUDm5fdLrlpC8jzFYtNngwwcRDsizf6W-k).
 
 Instructions
 ------------
 1. Create a tracking Google Sheet [using the template here here](https://drive.google.com/previewtemplate?id=14JHPhi8x2Sna8vBT4zYnEC-EATy7tDW8lKSORkMw5zU&mode=public).  Just click "Use this template".
 2. You'll probably want to rename the spreadsheet and the associated form.
 3. Publish the sheet to the web; go to `File | Publish to the web...`, and publish the entire spreadsheet.
-4. Go to the [tracker visualization website](https://chungwu.github.io/zoe-tracker/), and enter your spreadsheet key.  The spreadsheet key can be found in the URL of your spreadsheet; it looks like `https://docs.google.com/spreadsheets/d/{LONG_KEY_STRING_HERE}/edit`
+4. Go to the [tracker visualization website](https://chungwu.github.io/zoe-tracker/), and enter your spreadsheet key.  The spreadsheet key can be found in the URL of your spreadsheet; it looks like `https://docs.google.com/spreadsheets/d/{LONG_KEY_STRING_HERE}/edit`.  Once you've entered the key, you can bookmark the URL to always come back to this.
 
 Tracking events
 ---------------
