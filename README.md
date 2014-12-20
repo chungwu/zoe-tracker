@@ -3,9 +3,10 @@ zoe-tracker
 
 Instructions
 ------------
-1. Create a [tracking Google Sheet from here](https://www.google.com).
-2. Publish the sheet to the web; go to `File | Publish to the web...`, and publish the entire spreadsheet.
-3. Go to the [tracker visualization website](https://chungwu.github.io/zoe-tracker/), and enter your spreadsheet key.  The spreadsheet key can be found in the URL of your spreadsheet; it looks like `https://docs.google.com/spreadsheets/d/{LONG_KEY_STRING_HERE}/edit`
+1. Create a tracking Google Sheet [using the template here here](https://drive.google.com/previewtemplate?id=14JHPhi8x2Sna8vBT4zYnEC-EATy7tDW8lKSORkMw5zU&mode=public).  Just click "Use this template".
+2. You'll probably want to rename the spreadsheet and the associated form.
+3. Publish the sheet to the web; go to `File | Publish to the web...`, and publish the entire spreadsheet.
+4. Go to the [tracker visualization website](https://chungwu.github.io/zoe-tracker/), and enter your spreadsheet key.  The spreadsheet key can be found in the URL of your spreadsheet; it looks like `https://docs.google.com/spreadsheets/d/{LONG_KEY_STRING_HERE}/edit`
 
 Tracking events
 ---------------
