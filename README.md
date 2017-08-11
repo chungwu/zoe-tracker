@@ -28,7 +28,7 @@ You can define your own events and states, with custom colors, by editing the "K
 Brief description of available options below.  Cells that `look like this` are predefined strings that must be entered as-is; other cells can be customized to your liking.
 
 Type | Name | Value | Background / Foreground Colors | Description
---- | --- | --- | --- | --- | ---
+--- | --- | --- | --- | ---
 `flag` | `title` | Title of your visualization | _ignored_ | This configures the header and page title of the visualization
 `event` | Event name | Comma-separated list of action substrings | Colors used for the event markers | Define a class of events whose markers should be colored a certain way. In the Value column, you can specify a comma-separated list of substrings to look for in a Actions that should be marked as this event type.
 `state` | State name | Comma-separated list of event or action substrings | Colors used for the state regions | Defines a state of being that is usually defined by a starting and ending event.  The Value column specifies a comma-separated list of substrings for event names or actions that should trigger transition into this state.  For example, the "sleeps" event will trigger transition into the "asleep" state, etc.
